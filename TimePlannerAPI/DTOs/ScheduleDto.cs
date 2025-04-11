@@ -94,6 +94,7 @@ namespace TimePlannerAPI.DTOs
         /// </summary>
         //[ValidateComplexType]//validates nested objects
         public List<TimeBlockDto> TimeBlocks { get; set; } = new List<TimeBlockDto>();
+        //public required List<TimeBlockDto> DurationMinutes { get; set; }
 
 
 

@@ -93,14 +93,13 @@ namespace TimePlannerAPI.Endpoint
 
             if (schedule is null || schedule.UserId != userId)
             {
-                return TypedResults
-                    .Created("", null);
+                return TypedResults.Created("", null);
             }
 
             var timeBlock = mapper.Map<TimeBlock>(createTimeBlockDto);
             timeBlock.ScheduleId = scheduleId;
 
-            await repository.Create(timeBlock);
+            await repository.CreateAsync(timeBlock);
             await outputCacheStore.EvictByTagAsync("timeblocks-get", default);
 
             var timeBlockDto = mapper.Map<TimeBlockDto>(timeBlock);

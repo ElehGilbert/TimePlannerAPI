@@ -1,12 +1,14 @@
 ﻿
-        using FluentValidation;
+using TimePlannerAPI.DTOs;
+using TimePlannerAPI.Repositories;
+using FluentValidation;
 
 namespace TimePlannerAPI.DTOs
 {
     public class UpdateTimeBlockDtoValidator : AbstractValidator<UpdateTimeBlockDto>
         {
-            public UpdateTimeBlockDtoValidator()
-            {
+            public UpdateTimeBlockDtoValidator() //(UpdateTimeBlockDto dto)
+        {
                 // Title validation (when provided)
                 When(x => x.Title != null, () =>
                 {
@@ -22,14 +24,13 @@ namespace TimePlannerAPI.DTOs
                         .MaximumLength(500);
                 });
 
-                // Time validation rules
-                RuleFor(x => x)
-                    .Must(dto => dto.StartTime == null,
-                    dto.EndTime == null,
-                    dto.StartTime < dto.EndTime)
+                // Time validation rules !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Come back and adjust this Validation
+                //RuleFor(x => x)
+                //    .Must(dto => dto.StartTime == null, dto.EndTime == null,
+                //   dto.StartTime < dto.EndTime)
 
-                    .WithMessage("End time must be after start time")
-                    .OverridePropertyName("TimeRange");
+                //    .WithMessage("End time must be after start time")
+                //    .OverridePropertyName("TimeRange");
 
                 // Color validation (when provided)
                 When(x => x.Color != null, () =>

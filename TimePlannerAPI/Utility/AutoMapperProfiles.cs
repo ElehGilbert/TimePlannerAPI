@@ -20,7 +20,7 @@ namespace TimePlannerAPI.Utility
 
 
             CreateMap<Schedule, ScheduleDto>()
-                .ForMember(dest => dest.TimeBlockCount,
+                .ForMember(dest => dest.TimeBlocks,
                 opt => opt.MapFrom(src => src.TimeBlocks.Count));
 
 
@@ -41,6 +41,27 @@ namespace TimePlannerAPI.Utility
             //CreateMap<User, UserDTO>(); //Create map from Genre to CreateGenreDTO
 
             //CreateMap<createUserDTO, User>(); //Create map from CreateUserDTO to User
+
+
+
+
+            // In your AutoMapper profile configuration
+            CreateMap<TimeBlock, TimeBlockDto>()
+                .ForMember(dest => dest.DurationMinutes,
+                    opt => opt.MapFrom(src => (src.EndTime - src.StartTime).TotalMinutes));
+
+            CreateMap<CreateTimeBlockDto, TimeBlock>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(_ => DateTime.UtcNow))
+                .ForMember(dest => dest.EndTime, opt => opt.Ignore());
+               // .ForMember(dest => dest.UserId, opt => opt.Ignore());
+
+            CreateMap<UpdateTimeBlockDto, TimeBlock>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.StartTime, opt => opt.Ignore())
+                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(_ => DateTime.UtcNow))
+                //.ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.ScheduleId, opt => opt.Ignore());
 
         }
     }

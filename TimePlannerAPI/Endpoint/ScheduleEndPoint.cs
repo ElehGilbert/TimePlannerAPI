@@ -101,7 +101,7 @@ namespace TimePlannerAPI.Endpoint
                 }
 
                 mapper.Map(updateScheduleDto, existingSchedule);
-                existingSchedule.LastModifiedDate = DateTime.UtcNow;
+                existingSchedule.CreatedDate = DateTime.UtcNow;
 
                 await repository.UpdateScheduleAsync(existingSchedule);
                 await outputCacheStore.EvictByTagAsync("schedules-get", default);

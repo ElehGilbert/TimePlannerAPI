@@ -16,36 +16,36 @@ namespace TimePlannerAPI.Endpoint
             public static RouteGroupBuilder MapActivities(this RouteGroupBuilder group)
             {
                 // Endpoint to get all activities
-                group.MapGet("/", GetAll)
+                group.MapGet("/", GetAllByUserIdAsync)
                     .CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("activities-get"));
 
                 // Endpoint to get activity by ID
-                group.MapGet("/{id:guid}", GetById);
+                group.MapGet("/{id:guid}", GetByIdAsync);
 
                 // Endpoint to create new activity
-                group.MapPost("/", Create);
+                group.MapPost("/", CreateAsync);
 
                 // Endpoint to update activity
-                group.MapPut("/{id:guid}", Update);
+                group.MapPut("/{id:guid}", UpdateAsync);
 
                 // Endpoint to delete activity
-                group.MapDelete("/{id:guid}", Delete);
+                group.MapDelete("/{id:guid}", DeleteAsync);
 
                 return group;
             }
 
-            static async Task<Ok<List<ActivityDto>>> GetAll(
+            static async Task<Ok<List<ActivityDto>>> GetAllByUserIdAsync(
                 IActivityRepository repository,
                 IMapper mapper,
                 ClaimsPrincipal user)
             {
                 var userId = GetUserId(user);
-                var activities = await repository.GetByUserId(userId);
+                var activities = await repository.GetAllByUserIdAsync(userId);
                 var activityDtos = mapper.Map<List<ActivityDto>>(activities);
                 return TypedResults.Ok(activityDtos);
             }
 
-            static async Task<Results<Ok<ActivityDto>, NotFound>> GetById(
+            static async Task<Results<Ok<ActivityDto>, NotFound>> GetByIdAsync(
                 Guid id,
                 IActivityRepository repository,
                 IMapper mapper,
@@ -63,7 +63,7 @@ namespace TimePlannerAPI.Endpoint
                 return TypedResults.Ok(activityDto);
             }
 
-            static async Task<Created<ActivityDto>> Create(
+            static async Task<Created<ActivityDto>> CreateAsync(
                 CreateActivityDto createActivityDto,
                 IActivityRepository repository,
                 IOutputCacheStore outputCacheStore,
@@ -89,9 +89,9 @@ namespace TimePlannerAPI.Endpoint
                 ClaimsPrincipal user)
             {
                 var userId = GetUserId(user);
-                var existingActivity = await repository.GetUserById(id);
+                var existingActivity = await repository.GetAllByUserIdAsync(id);
 
-                if (existingActivity is null || existingActivity.UserId != userId)
+                if (existingActivity is null || existingActivity.UserById != userId)
                 {
                     return TypedResults.NotFound();
                 }
@@ -103,21 +103,21 @@ namespace TimePlannerAPI.Endpoint
                 return TypedResults.NoContent();
             }
 
-        static async Task<Results<NotFound, NoContent>> Delete(
+        static async Task<Results<NotFound, NoContent>> DeleteAsync(
             Guid id,
             IActivityRepository repository,
             IOutputCacheStore outputCacheStore,
             ClaimsPrincipal user)
         {
             var userId = GetUserId(user);
-            var activity = await repository.GetById(id);
+            var activity = await repository.GetByIdAsync(id);
 
             if (activity is null || activity.UserId != userId)
             {
                 return TypedResults.NotFound();
             }
 
-            await repository.Delete(id);
+            await repository.DeleteAsync(id);
             await outputCacheStore.EvictByTagAsync("activities-get", default);
 
             return TypedResults.NoContent();

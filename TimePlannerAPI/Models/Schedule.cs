@@ -10,7 +10,7 @@ namespace TimePlannerAPI.Models
 
         [Required]
         [MaxLength(100)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         public DateTime CreatedDate { get; set; }=DateTime.UtcNow;
 
@@ -18,8 +18,8 @@ namespace TimePlannerAPI.Models
         public Guid UserId { get; set; }
 
         //Navigation Property
-        public User Users { get; set; }
-        public ICollection<TimeBlock> TimeBlocks { get; set; }
+        public User Users { get; set; } = null!;
+        public ICollection<TimeBlock> TimeBlocks { get; set; } = null!;
     }
 
 

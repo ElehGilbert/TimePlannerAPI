@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using TimePlannerAPI.Repositories;
 using Microsoft.OpenApi.Models;
 using TimePlannerAPI.Endpoint;
+using FluentValidation;
+using TimePlannerAPI.DTOs;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,10 @@ builder.Services.AddScoped<ITimeBlockRepository, TimeBlockRepository>();
 //This is for Swagger
 builder.Services.AddEndpointsApiExplorer(); //Required for Swagger
 builder.Services.AddSwaggerGen(); //Adds Swagger Generator
+
+
+// Add CreateTimeBlockDtoValidator to services configuration
+builder.Services.AddValidatorsFromAssemblyContaining<CreateTimeBlockDtoValidator>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
