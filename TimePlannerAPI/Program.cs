@@ -6,6 +6,7 @@ using FluentValidation;
 using TimePlannerAPI.DTOs;
 using TimePlannerAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using TimePlannerAPI.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +41,40 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateTimeBlockDtoValidator
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+
+
+
+
+// Add to your services configuration
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+// Add JWT authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Secret"])),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+// Add authorization
+builder.Services.AddAuthorization();
+
+// Add validators
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>();
+
+
+/////Service End Here
+
 var app = builder.Build();
 
 
@@ -52,21 +87,27 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
+//Middleware Zone - Begin
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwagger();
     app.MapOpenApi();
 }
-app.MapGroup("/api/schedules").MapSchedules().RequireAuthorization();
+app.MapGroup("/schedules").MapSchedules().RequireAuthorization();
 
 
-app.MapGroup("/api/schedules/{scheduleId:guid}/timeblocks")
+app.MapGroup("/schedules/{scheduleId:guid}/timeblocks")
     .MapTimeBlocks()
     .RequireAuthorization();
 
-app.MapGroup("/api/activities")
+app.MapGroup("/activities")
     .MapActivities()
+    .RequireAuthorization();
+
+app.MapGroup("/users")
+    .MapUsers()
     .RequireAuthorization();
 
 
