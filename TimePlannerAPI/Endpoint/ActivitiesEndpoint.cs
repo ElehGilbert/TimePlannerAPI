@@ -73,8 +73,8 @@ namespace TimePlannerAPI.Endpoint
                 var activity = mapper.Map<Activity>(createActivityDto);
                 activity.UserId = GetUserId(user);
 
-                await repository.Create(activity);
-                await outputCacheStore.EvictByTagAsync("activities-get", default);
+                await repository.CreateAsync(activity);// Fixed method name
+            await outputCacheStore.EvictByTagAsync("activities-get", default);
 
                 var activityDto = mapper.Map<ActivityDto>(activity);
                 return TypedResults.Created($"/activities/{activity.Id}", activityDto);
@@ -87,17 +87,20 @@ namespace TimePlannerAPI.Endpoint
                 IOutputCacheStore outputCacheStore,
                 IMapper mapper,
                 ClaimsPrincipal user)
+
+
             {
                 var userId = GetUserId(user);
-                var existingActivity = await repository.GetAllByUserIdAsync(id);
+                var existingActivity = await repository.GetByIdAsync(id);// Fetch a single activity by ID
 
-                if (existingActivity is null || existingActivity.UserById != userId)
-                {
+            if (existingActivity is null || existingActivity.UserId != userId)// Check UserId instead of UserById
+            {
                     return TypedResults.NotFound();
                 }
+            // Pass the required 'updateDto' parameter to the repository's UpdateAsync method
 
-                mapper.Map(updateActivityDto, existingActivity);
-                await repository.UpdateAsync(existingActivity);
+            // mapper.Map(updateActivityDto, existingActivity);
+            await repository.UpdateAsync(id, updateActivityDto);
                 await outputCacheStore.EvictByTagAsync("activities-get", default);
 
                 return TypedResults.NoContent();
