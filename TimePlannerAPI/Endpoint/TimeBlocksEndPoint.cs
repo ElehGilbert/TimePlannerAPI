@@ -93,7 +93,7 @@ namespace TimePlannerAPI.Endpoint
 
             if (schedule is null || schedule.UserId != userId)
             {
-                return TypedResults.Created("", null);
+                return TypedResults.Created<TimeBlockDto?>("", null);
             }
 
             var timeBlock = mapper.Map<TimeBlock>(createTimeBlockDto);
