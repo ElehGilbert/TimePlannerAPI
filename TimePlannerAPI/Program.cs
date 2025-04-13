@@ -4,9 +4,17 @@ using Microsoft.OpenApi.Models;
 using TimePlannerAPI.Endpoint;
 using FluentValidation;
 using TimePlannerAPI.DTOs;
+using TimePlannerAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddDbContext<timePlannerDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
 // Add services to the container.
 
