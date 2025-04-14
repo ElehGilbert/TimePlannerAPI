@@ -17,7 +17,7 @@ namespace TimePlannerAPI.Endpoint
     public static class UsersEndpoint
     {
 
-            public static RouteGroupBuilder MapUsers(this RouteGroupBuilder group)
+            public static RouteGroupBuilder MapUsers(this RouteGroupBuilder group) //User MapGroup
             {
                 group.MapPost("/register", Register)
                     .WithName("RegisterUser")

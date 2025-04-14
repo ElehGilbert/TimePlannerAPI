@@ -35,10 +35,7 @@ namespace TimePlannerAPI.Repositories
         public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
         {
             return await _context.Users
-                .FirstOrDefaultAsync(u =>
-                {
-                    return u.RefreshToken == refreshToken;
-                });
+                .FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);//USing Expressing body instead lamba expression
         }
 
         public async Task<User> CreateAsync(User user)
