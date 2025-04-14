@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -61,10 +62,15 @@ namespace TimePlannerAPI.Endpoint
                 return group;
             }
 
+
+
+        //Method for the Follwoing EndPoints
+        //Error Corrected and Implemented the Mapper for solve the ASP.NET cor runtime error
+
             private static async Task<IResult> Register(
                 [FromBody] RegisterUserDto registerDto,
                 [FromServices] IAuthService authService,
-                [FromServices] IValidator<RegisterUserDto> validator)
+                [FromServices] IValidator<RegisterUserDto> validator, IMapper mapper)
             {
                 var validationResult = await validator.ValidateAsync(registerDto);
                 if (!validationResult.IsValid)
@@ -85,7 +91,7 @@ namespace TimePlannerAPI.Endpoint
             private static async Task<IResult> Login(
                 [FromBody] LoginUserDto loginDto,
                 [FromServices] IAuthService authService,
-                [FromServices] IValidator<LoginUserDto> validator)
+                [FromServices] IValidator<LoginUserDto> validator, IMapper mapper)
             {
                 var validationResult = await validator.ValidateAsync(loginDto);
                 if (!validationResult.IsValid)
@@ -109,6 +115,7 @@ namespace TimePlannerAPI.Endpoint
 
             private static async Task<IResult> RefreshToken(
                 [FromBody] RefreshTokenDto refreshTokenDto,
+                IMapper mapper,
                 [FromServices] IAuthService authService)
             {
                 var result = await authService.RefreshTokenAsync(refreshTokenDto.RefreshToken);
@@ -120,7 +127,7 @@ namespace TimePlannerAPI.Endpoint
             }
 
             [Authorize]
-            private static async Task<IResult> GetCurrentUser(
+            private static async Task<IResult> GetCurrentUser(IMapper mapper,
                 [FromServices] IUserService userService,
                 ClaimsPrincipal user)
             {
@@ -130,7 +137,7 @@ namespace TimePlannerAPI.Endpoint
             }
 
             [Authorize]
-            private static async Task<IResult> UpdateCurrentUser(
+            private static async Task<IResult> UpdateCurrentUser(IMapper mapper,
                 [FromBody] UpdateUserDto updateDto,
                 [FromServices] IUserService userService,
                 [FromServices] IValidator<UpdateUserDto> validator,

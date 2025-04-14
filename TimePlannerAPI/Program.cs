@@ -11,7 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using TimePlannerAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;//Just Installed 14 April
+using System.Text;
+using AutoMapper;//Just Installed 14 April
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,6 +62,13 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 // Add missing validators
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserDtoValidator>(); //Need to add code in the class!!!!!!!!!!!!!!!!!!!!!
 builder.Services.AddValidatorsFromAssemblyContaining<LoginUserDtoValidator>(); //Need to add code in the class!!!!!!!!!!!!!!!!!!!!!
+
+//AutoMapping Service
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+//Creating Cache for the Output testing using /genres endpoint
+
+builder.Services.AddOutputCache();
 
 
 
