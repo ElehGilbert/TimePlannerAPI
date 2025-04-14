@@ -1,15 +1,5 @@
 ﻿
 // Services/AuthService.cs
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using TimePlanner.Api.DTOs;
-using TimePlanner.Api.Entities;
-using TimePlanner.Api.Repositories;
-
-
 using System.Security.Cryptography;
 using System.Text;
 using TimePlannerAPI.DTOs;
@@ -63,7 +53,7 @@ namespace TimePlannerAPI.Services
                 await _userRepository.CreateAsync(user);
 
                 var authResponse = await _tokenService.GenerateTokens(user);
-                return AuthResult.Success(authResponse);
+                return AuthResult.success(authResponse);
             }
 
             public async Task<AuthResult> LoginAsync(LoginUserDto loginDto)
@@ -80,7 +70,7 @@ namespace TimePlannerAPI.Services
                 }
 
                 var authResponse = await _tokenService.GenerateTokens(user);
-                return AuthResult.Success(authResponse);
+                return AuthResult.success(authResponse);
             }
 
             public async Task<AuthResult> RefreshTokenAsync(string refreshToken)
@@ -97,17 +87,18 @@ namespace TimePlannerAPI.Services
                 }
 
                 var authResponse = await _tokenService.GenerateTokens(user);
-                return AuthResult.Success(authResponse);
+                return AuthResult.success(authResponse);
             }
 
-            private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        // 
+            private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
             {
                 using var hmac = new HMACSHA512();
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
 
-            private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+            private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
             {
                 using var hmac = new HMACSHA512(passwordSalt);
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
@@ -115,16 +106,18 @@ namespace TimePlannerAPI.Services
             }
         }
 
-        public class AuthResult
-        {
-            public bool Success { get; set; }
-            public string Message { get; set; }
-            public AuthResponseDto AuthResponse { get; set; }
+    public class AuthResult
+    {
+        public bool Success { get; set; } //Ensure this is a property with both getter  and setter
+        public string Message { get; set; }
+        public AuthResponseDto AuthResponse { get; set; }
 
-            public static AuthResult Success(AuthResponseDto authResponse)
-            {
-                return new AuthResult { Success = true, AuthResponse = authResponse };
-            }
+        public static AuthResult success(AuthResponseDto authResponse) //change this to small caps so Success isn't read as a method
+        {
+            
+
+            return new AuthResult { Success = true, AuthResponse = authResponse };
+        }
         public static AuthResult Fail(string message)
         {
             return new AuthResult { Success = false, Message = message };

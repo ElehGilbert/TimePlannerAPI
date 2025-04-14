@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TimePlannerAPI.DTOs;
+using TimePlannerAPI.Services;
 
 // Endpoints/UsersEndpoint.cs
 //using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ using TimePlannerAPI.DTOs;
 
 namespace TimePlannerAPI.Endpoint
 {
-    public class UsersEndpoint
+    public static class UsersEndpoint
     {
 
             public static RouteGroupBuilder MapUsers(this RouteGroupBuilder group)
@@ -45,7 +46,7 @@ namespace TimePlannerAPI.Endpoint
                     .WithName("GetCurrentUser")
                     .WithSummary("Get current user info")
                     .WithDescription("Returns information about the currently authenticated user")
-                    .Produces<UserDto>()
+                    .Produces<UserDTO>()
                     .Produces(StatusCodes.Status401Unauthorized);
 
                 group.MapPut("/me", UpdateCurrentUser)
@@ -53,7 +54,7 @@ namespace TimePlannerAPI.Endpoint
                     .WithName("UpdateCurrentUser")
                     .WithSummary("Update current user")
                     .WithDescription("Updates information for the currently authenticated user")
-                    .Produces<UserDto>()
+                    .Produces<UserDTO>()
                     .ProducesValidationProblem()
                     .Produces(StatusCodes.Status401Unauthorized);
 
@@ -72,7 +73,8 @@ namespace TimePlannerAPI.Endpoint
                 }
 
                 var result = await authService.RegisterAsync(registerDto);
-                if (!result.Success)
+
+            if (!result.Success)
                 {
                     return Results.BadRequest(result.Message);
                 }
@@ -90,14 +92,19 @@ namespace TimePlannerAPI.Endpoint
                 {
                     return Results.ValidationProblem(validationResult.ToDictionary());
                 }
+            
 
-                var result = await authService.LoginAsync(loginDto);
-                if (!result.Success)
-                {
-                    return Results.Unauthorized();
-                }
+            var result = await authService.LoginAsync(loginDto);
+            if (!result.Success)
+            {
+                return Results.Unauthorized();
+            }
+            //if (!result.Success)
+            //{
+            //    return Results.BadRequest(result.Message);
+            //}
 
-                return Results.Ok(result.AuthResponse);
+            return Results.Ok(result.AuthResponse);
             }
 
             private static async Task<IResult> RefreshToken(
@@ -141,9 +148,6 @@ namespace TimePlannerAPI.Endpoint
             }
         }
 
-        public class RefreshTokenDto
-        {
-            public string RefreshToken { get; set; }
-        }
-    }
+  
+}
 

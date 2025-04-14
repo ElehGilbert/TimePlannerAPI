@@ -18,8 +18,17 @@ namespace TimePlannerAPI.Models
         [MaxLength(100)]
         public string FullName { get; set; }
 
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
         //Navigation property for related schedules
         public ICollection<Schedule> Schedules { get; set; }
 
-    }
+
+
+        public string RefreshToken { get; set; } // Added property these properties are necessary for managing refresh tokens
+        public DateTime RefreshTokenExpiry { get; set; }// Added property these properties are necessary for managing refresh tokens
+        
+
+        }
 }

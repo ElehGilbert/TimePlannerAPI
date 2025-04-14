@@ -18,9 +18,9 @@ namespace TimePlannerAPI.DTOs
             [EmailAddress]
             public string Email { get; set; }
 
-            [Required]
-            [StringLength(100)]
-            public string FullName { get; set; }
+        [Required]
+        [StringLength(100)]
+        public string FullName { get; set; } = null!;
 
             [JsonIgnore] // Never return password hash in DTO
             public string PasswordHash { get; set; }

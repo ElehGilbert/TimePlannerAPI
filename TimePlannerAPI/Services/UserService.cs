@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using TimePlannerAPI.DTOs;
+using TimePlannerAPI.Exceptions;
 using TimePlannerAPI.Models;
 using TimePlannerAPI.Repositories;
 
@@ -33,7 +34,7 @@ namespace TimePlannerAPI.Services
             return MapToDto(user);
         }
 
-        public async Task<UserDto> UpdateAsync(Guid id, UpdateUserDto updateDto)
+        public async Task<UserDTO> UpdateAsync(Guid id, UpdateUserDto updateDto)
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
@@ -68,9 +69,9 @@ namespace TimePlannerAPI.Services
             return MapToDto(updatedUser);
         }
 
-        private static UserDto MapToDto(User user)
+        private static UserDTO MapToDto(User user)
         {
-            return new UserDto
+            return new UserDTO
             {
                 Id = user.Id,
                 Email = user.Email,

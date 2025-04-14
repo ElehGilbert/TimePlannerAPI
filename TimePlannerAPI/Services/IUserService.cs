@@ -4,7 +4,7 @@ namespace TimePlannerAPI.Services
 {
     public interface IUserService
     {
-        Task<UserDto> GetByIdAsync(Guid id);
-        Task<UserDto> UpdateAsync(Guid id, UpdateUserDto updateDto);
+        Task<UserDTO> GetByIdAsync(Guid id);
+        Task<UserDTO> UpdateAsync(Guid id, UpdateUserDto updateDto);
     }
 }

@@ -7,6 +7,9 @@ using TimePlannerAPI.DTOs;
 using TimePlannerAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using TimePlannerAPI.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;//Just Installed 14 April
 
 
 var builder = WebApplication.CreateBuilder(args);

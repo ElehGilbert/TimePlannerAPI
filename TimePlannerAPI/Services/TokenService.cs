@@ -53,7 +53,7 @@ namespace TimePlannerAPI.Services
                 {
                     Token = token,
                     RefreshToken = refreshToken,
-                    User = new UserDto
+                    User = new UserDTO
                     {
                         Id = user.Id,
                         Email = user.Email,
