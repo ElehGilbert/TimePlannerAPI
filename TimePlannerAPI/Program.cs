@@ -1,3 +1,5 @@
+using TimePlannerAPI.Validator; // Add this namespace if LoginUserDtoValidator is defined here
+
 using Microsoft.AspNetCore.Builder;
 using TimePlannerAPI.Repositories;
 using Microsoft.OpenApi.Models;
@@ -43,6 +45,22 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateTimeBlockDtoValidator
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+
+//1.	IUserRepository // Add IUserRepository registration
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
+////2.	IValidator<UpdateUserDto>:
+//builder.Services.AddScoped<IValidator<UpdateUserDto>, UpdateUserDtoValidator>();
+
+
+////3.	IValidator<LoginUserDto>:
+//builder.Services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
+
+// Add missing validators
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserDtoValidator>(); //Need to add code in the class!!!!!!!!!!!!!!!!!!!!!
+builder.Services.AddValidatorsFromAssemblyContaining<LoginUserDtoValidator>(); //Need to add code in the class!!!!!!!!!!!!!!!!!!!!!
 
 
 
