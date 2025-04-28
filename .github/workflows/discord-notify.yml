@@ -14,6 +14,6 @@ jobs:
         run: |
           curl -X POST -H "Content-Type: application/json" \
           -d '{"username": "GitHub Actions", "content": "**New Push Detected!**\nRepository: ${GITHUB_REPOSITORY}\nCommit: ${GITHUB_SHA}\nBranch: ${GITHUB_REF}"}' \
-          ${https://discordapp.com/api/webhooks/1366341624044457984/Foglc-iwQVTM0pLPZ3Dihyxr0FeMFn4_sePRfSJN7U7hOeQuJHxd1n9-JTMwSy8wW1sw}
+          ${DISCORD_WEBHOOK}
         env:
-          DISCORD_WEBHOOK: ${{ secrets.https://discordapp.com/api/webhooks/1366341624044457984/Foglc-iwQVTM0pLPZ3Dihyxr0FeMFn4_sePRfSJN7U7hOeQuJHxd1n9-JTMwSy8wW1sw }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
