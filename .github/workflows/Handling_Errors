@@ -1,0 +1,14 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build Project
+        run: dotnet build
+
+      - name: Run Tests
+        run: dotnet test || curl -X POST -H "Content-Type: application/json" \
+          -d '{"username": "GitHub Actions", "content": "**Error Detected!**\nRepository: ${GITHUB_REPOSITORY}\nCommit: ${GITHUB_SHA}\nBranch: ${GITHUB_REF}\nError: Build/Test failed!"}' \
+          ${DISCORD_WEBHOOK}
